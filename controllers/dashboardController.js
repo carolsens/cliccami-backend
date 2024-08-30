@@ -6,8 +6,6 @@ const dashboardController = {
         try {
             const email = req.user.email;
 
-            console.log(email)
-
             if (typeof email !== 'string') {
                 throw new Error('Email is not a valid string');
             }

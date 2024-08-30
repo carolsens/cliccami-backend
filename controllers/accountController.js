@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { Account, User } = require('../models');
 
 const accountController = {
@@ -34,59 +34,9 @@ const accountController = {
         }
     },
 
-    async findAll(req, res) {
-        try {
-            const accounts = await Account.findAll();
-            res.status(200).json(accounts);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-            
-        }
-    },
 
-    async findById(req, res) {
-        try {
-            const account = await Account.findById(req.params.id);
-            if (account) {
-                res.status(200).json(account);
-            } else {
-                res.status(404).json({ error: 'Account not found' });
-            }
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
 
-    async update(req, res) {
-        try {
-            const [updated] = await Account.update(req.body, {
-                where: { id: req.params.id }
-            });
-            if (updated) {
-                const updatedAccount = await Account.findById(req.params.id);
-                res.status(200).json(updatedAccount);
-            } else {
-                res.status(404).json({ error: 'Account not found' });
-            }
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
 
-    async delete(req, res) {
-        try {
-            const deleted = await Account.destroy({
-                where: { id: req.params.id }
-            });
-            if (deleted) {
-                res.status(204).json();
-            } else {
-                res.status(404).json({ error: 'Account not found' });
-            }
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    }
 };
 
 module.exports = accountController;
