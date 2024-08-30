@@ -13,10 +13,11 @@ afterAll(async () => {
 describe('User Authentication', () => {
     it('should authenticate a user with correct credentials', async () => {
         await request(app)
-            .post('/api/register')
+            .post('/api/account/create')
             .send({
                 email: 'loginuser@loginuser.com',
-                password: 'loginpassword'
+                password: 'loginpassword',
+                name: 'teste'
             });
 
         const res = await request(app)
@@ -25,7 +26,7 @@ describe('User Authentication', () => {
                 email: 'loginuser@loginuser.com',
                 password: 'loginpassword'
             });
-        expect(res.statusCode).toEqual(200);
+        expect(res.statusCode).toBe(200);
         expect(res.body).toHaveProperty('token');
     });
 
@@ -36,16 +37,17 @@ describe('User Authentication', () => {
                 email: 'wronguser@wronguser.com',
                 password: 'wrongpassword'
             });
-        expect(res.statusCode).toEqual(400);
+        expect(res.statusCode).toBe(400);
         expect(res.body).toHaveProperty('message', 'Usuário não encontrado');
     });
 
     it('should not authenticate a user with incorrect password', async () => {
         await request(app)
-            .post('/api/register')
+            .post('/api/account/create')
             .send({
                 email: 'loginuser@loginuser.com',
-                password: 'loginpassword'
+                password: 'loginpassword',
+                name: 'teste'
             });
 
         const res = await request(app)
@@ -54,7 +56,7 @@ describe('User Authentication', () => {
                 email: 'loginuser@loginuser.com',
                 password: 'wrongpassword'
             });
-        expect(res.statusCode).toEqual(400);
+        expect(res.statusCode).toBe(400);
         expect(res.body).toHaveProperty('message', 'Senha inválida');
     });
 });

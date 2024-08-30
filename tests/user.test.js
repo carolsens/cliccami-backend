@@ -13,16 +13,19 @@ afterAll(async () => {
 describe('User Registration and Authentication', () => {
     it('should register a new user', async () => {
         const res = await request(app)
-            .post('/api/register')
+            .post('/api/account/create')
             .send({
                 email: 'testuser@testuser.com',
-                password: 'testpassword'
+                password: 'testpassword',
+                name: 'teste'
             });
-        expect(res.statusCode).toEqual(201);
-        expect(res.body).toHaveProperty('message', 'Usuário registrado com sucesso');
+        expect(res.statusCode).toBe(201);
+        expect(res.body).toHaveProperty('id');
+        // expect(res.body).toHaveProperty('email', 'testuser@testuser.com');
     });
 
     it('should not register a user with an existing email', async () => {
+        // Primeiro registra um usuário
         await request(app)
             .post('/api/register')
             .send({
@@ -30,13 +33,15 @@ describe('User Registration and Authentication', () => {
                 password: 'testpassword'
             });
 
+        // Tenta registrar o mesmo usuário novamente
         const res = await request(app)
-            .post('/api/register')
+            .post('/api/account/create')
             .send({
                 email: 'testuser@testuser.com',
-                password: 'testpassword'
+                password: 'testpassword',
+                name: ''
             });
-        expect(res.statusCode).toEqual(400);
-        expect(res.body).toHaveProperty('message', 'Usuário já existe');
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('error', 'E-mail já cadastrado');
     });
 });
