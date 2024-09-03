@@ -1,8 +1,6 @@
 const { Midea, Site, Page, MideaPage, User} = require('../models');
 const fs = require('fs');
-const sizeOf = require('image-size');
 const s3Client = require('../services/s3Service');
-const { JSDOM } = require('jsdom');
 const axios = require('axios');
 const { PutObjectCommand } = require('@aws-sdk/client-s3');
 const mime = require('mime-types');
@@ -16,10 +14,11 @@ const path = require('path');
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 ffmpeg.setFfprobePath(ffprobeStatic.path);
 
-
 const contentController = {
     async getPageTitle(url) {
         try {
+
+            // Coleta o título da página
             const { data } = await axios.get(url);
             const $ = cheerio.load(data);
             let title = $('title').text();
@@ -30,7 +29,6 @@ const contentController = {
             return 'Untitled';
         }
     },
-
 
     async create(req, res) {
         try {
@@ -51,10 +49,10 @@ const contentController = {
             const { typePage, url } = req.body;
             const file = req.file;
 
-            // 1. Criação do objeto Midea
+            // Cria o objeto Midea
             const midea = await Midea.create({ name: req.body.name,});
 
-            // 2. Upload do arquivo para o S3 usando o ID do Midea como nome do arquivo
+            // Upload do arquivo para o S3 usando o ID do Midea como nome do arquivo
             let uploadParams;
             let filePath = '';
 
@@ -68,7 +66,6 @@ const contentController = {
                     Body: file.buffer,
                     ContentType: file.mimetype,
                 };
-
             } else {
                 // Se estiver usando diskStorage
                 const extension = mime.extension(file.mimetype); // Obtém a extensão com base no mimetype
@@ -84,11 +81,12 @@ const contentController = {
 
             const command = new PutObjectCommand(uploadParams);
             const uploadResult = await s3Client.send(command);
-            const imageExtension = 'png'; // ou 'jpg' se preferir
+            const imageExtension = 'png';
             const imageFileName = `${midea.id}.${imageExtension}`;
             const imageTempPath = path.join(__dirname, '..', 'thumbnails', imageFileName);
 
 
+            // Coleta  a screenshot
             ffmpeg(file.path)
                 .screenshots({
                     timestamps: ['0.0'], // Captura o primeiro frame
@@ -101,7 +99,7 @@ const contentController = {
                         Bucket: process.env.AWS_S3_BUCKET_NAME,
                         Key: `images/${imageFileName}`,
                         Body: fs.createReadStream(imageTempPath),
-                        ContentType: 'image/png', // ou 'image/jpeg' dependendo da extensão
+                        ContentType: 'image/png',
                     };
 
                     const imageCommand = new PutObjectCommand(imageUploadParams);
@@ -116,8 +114,8 @@ const contentController = {
                         const { duration } = metadata.format;
                         const { width, height } = metadata.streams[0]; // Assume que o primeiro stream é o de vídeo
 
-                        // 4. Atualiza o objeto Midea com os dados obtidos
-                        midea.path = filePath;  // URL pública do arquivo no S3
+                        // Atualiza o objeto Midea com os dados obtidos
+                        midea.path = filePath; // Caminho do local do vídeo
                         midea.duration = duration;
                         midea.height = height;
                         midea.width = width;
@@ -139,6 +137,7 @@ const contentController = {
 
             const title = await contentController.getPageTitle(url);
 
+            // Cria ou verifica se já existe o Site
             let site = await Site.findOne({
                 where: {
                     url: req.body.url,
@@ -156,6 +155,8 @@ const contentController = {
                 });
             }
 
+
+            // Cria ou verifica se já existe a Page
             let page = await Page.findOne({
                 where: {
                     site_id: site.id,
@@ -173,7 +174,7 @@ const contentController = {
                 });
             }
 
-
+            // Cria ou verifica se já existe a relação MideaPage
             let mideaPage = await MideaPage.findOne({
                 where: {
                     midea_id: midea.id,

@@ -4,19 +4,19 @@ const { User } = require('../models');
 const login = async (req, res) => {
     const { email, password } = req.body;
 
-    // Encontrar usuário
+    // Encontra usuário
     const user = await User.findOne({ where: { email } });
     if (!user) {
         return res.status(400).json({ message: 'Usuário não encontrado' });
     }
 
-    // Verificar senha
+    // Verifica senha
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
         return res.status(400).json({ message: 'Senha inválida' });
     }
 
-    // Gerar token JWT
+    // Gera token JWT
     const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
         expiresIn: '1h'
     });
@@ -30,6 +30,7 @@ const authenticateToken = (req, res, next) => {
 
     if (token == null) return res.sendStatus(401);
 
+    // Verifica token
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) return res.sendStatus(401);
         req.user = user;

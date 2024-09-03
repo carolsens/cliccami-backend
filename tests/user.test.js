@@ -12,6 +12,8 @@ afterAll(async () => {
 
 describe('User Registration and Authentication', () => {
     it('should register a new user', async () => {
+
+        // Cria um novo usuário
         const res = await request(app)
             .post('/api/account/create')
             .send({
@@ -25,7 +27,7 @@ describe('User Registration and Authentication', () => {
     });
 
     it('should not register a user with an existing email', async () => {
-        // Primeiro registra um usuário
+        // Registra um usuário
         await request(app)
             .post('/api/register')
             .send({
@@ -33,7 +35,7 @@ describe('User Registration and Authentication', () => {
                 password: 'testpassword'
             });
 
-        // Tenta registrar o mesmo usuário novamente
+        // Tenta registrar o mesmo usuário novamente com e-mail igual
         const res = await request(app)
             .post('/api/account/create')
             .send({

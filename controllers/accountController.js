@@ -15,28 +15,23 @@ const accountController = {
             // Criptografa a senha antes de salvar
             const hashedPassword = await bcrypt.hash(password, 10);
 
-
+            // Cria a conta
             const account = await Account.create({
                 ...req.body
             });
 
-            // Cria a nova conta com a senha criptografada
+            // Cria o user com a senha criptografada
            await User.create({
                 ...req.body,
                 password: hashedPassword,
                 account_id: account.id
             });
 
-
             res.status(201).json(account);
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
     },
-
-
-
-
 };
 
 module.exports = accountController;

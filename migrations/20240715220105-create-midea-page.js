@@ -12,8 +12,8 @@ module.exports = {
       midea_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'midea',      // Nome da tabela que a chave estrangeira referencia
-          key: 'id',           // Coluna da tabela referenciada
+          model: 'midea',
+          key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
