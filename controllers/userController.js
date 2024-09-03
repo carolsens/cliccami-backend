@@ -61,17 +61,15 @@ const userController = {
             // Expira em 1 hora
             const expireDate = Date.now() + 3600000;
 
-            // Salva o token no banco de dados associado ao usuário (exemplo fictício)
             await PasswordResetToken.create({
                 user_id: user.id,
                 token: token,
                 expires_at: expireDate,
             });
 
-
             // Configura os parâmetros do email
             const params = {
-                Source: 'carolsens@gmail.com', // Substitua pelo seu endereço de email verificado no SES
+                Source: 'carolsens@gmail.com',
                 Destination: {
                     ToAddresses: [email],
                 },
@@ -104,9 +102,6 @@ const userController = {
             res.status(500).json({ message: 'Internal Server Error' });
         }
     }
-
-
-
 };
 
 module.exports = userController;

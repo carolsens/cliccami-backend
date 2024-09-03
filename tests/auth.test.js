@@ -12,6 +12,7 @@ afterAll(async () => {
 
 describe('User Authentication', () => {
     it('should authenticate a user with correct credentials', async () => {
+        // Cria um usuário
         await request(app)
             .post('/api/account/create')
             .send({
@@ -20,6 +21,7 @@ describe('User Authentication', () => {
                 name: 'teste'
             });
 
+        // Tenta fazer um login com as credenciais corretas
         const res = await request(app)
             .post('/api/login')
             .send({
@@ -31,6 +33,8 @@ describe('User Authentication', () => {
     });
 
     it('should not authenticate a user with incorrect credentials', async () => {
+
+        // Tenta fazer um login com as credenciais erradas
         const res = await request(app)
             .post('/api/login')
             .send({
@@ -50,6 +54,8 @@ describe('User Authentication', () => {
                 name: 'teste'
             });
 
+
+        // Tenta fazer um login com a senha errada
         const res = await request(app)
             .post('/api/login')
             .send({

@@ -17,7 +17,7 @@ const mideaPageController = {
 
             const accountId = user.account_id;
 
-
+            // Cria a relação para cada midea de mideaPage, caso não exista
             for (const midea of req.body.midea) {
                 const mideaId = midea.id;
 

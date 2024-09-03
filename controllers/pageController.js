@@ -12,7 +12,6 @@ const pageController = {
 
     async index(req, res) {
         try {
-
             const email = req.user.email;
             const user = await User.findOne({ where: { email } });
 
@@ -32,18 +31,18 @@ const pageController = {
                 where: { account_id: accountId, user_id: userId },
                 include: [
                     {
-                        model: Site, // O modelo relacionado
-                        as: 'site', // Alias usado na relação
-                        attributes: ['id', 'name', 'url'] // Especifique os campos que deseja incluir
+                        model: Site,
+                        as: 'site',
+                        attributes: ['id', 'name', 'url']
                     },
                     {
-                        model: MideaPage, // O modelo relacionado
-                        as: 'mideaPages',  // Especifique os campos que deseja incluir
+                        model: MideaPage,
+                        as: 'mideaPages',
                         include: [
                             {
-                                model: Midea, // O modelo relacionado para o conteúdo de midea_id
-                                as: 'midea', // Alias usado na relação
-                                attributes: ['name'] // Especifique os campos que deseja incluir do modelo Midea
+                                model: Midea,
+                                as: 'midea',
+                                attributes: ['name']
                             }
                         ]
                     }

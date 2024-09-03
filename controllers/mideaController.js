@@ -45,19 +45,19 @@ const mideaController = {
                 where: { account_id: accountId, user_id: userId },
                 include: [
                     {
-                        model: MideaPage, // O modelo relacionado
-                        as: 'mideaPages',  // Especifique os campos que deseja incluir
+                        model: MideaPage,
+                        as: 'mideaPages',
                         include: [
                             {
-                                model: Page, // O modelo relacionado para o conteúdo de midea_id
-                                as: 'page', // Alias usado na re
+                                model: Page,
+                                as: 'page',
                                 include: [
                                     {
-                                        model: Site, // O modelo relacionado para o conteúdo de midea_id
-                                        as: 'site', // Alias usado na relação
-                                        attributes: ['name'] // Especifique os campos que deseja incluir do modelo Midea
+                                        model: Site,
+                                        as: 'site',
+                                        attributes: ['name']
                                     }
-                                ]// Especifique os campos que deseja incluir do modelo Midea
+                                ]
                             }
                         ]
                     }
@@ -93,7 +93,6 @@ const mideaController = {
             res.status(500).json({ error: error.message });
         }
     },
-
 
     async indexName(req, res) {
         try {
@@ -156,7 +155,7 @@ const mideaController = {
             });
 
             if (deletedCount) {
-                res.status(204).json(); // No Content
+                res.status(204).json();
             } else {
                 res.status(404).json({ error: 'Midea not found' });
             }

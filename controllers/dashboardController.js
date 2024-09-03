@@ -18,16 +18,15 @@ const dashboardController = {
 
             const accountId = user.account_id;
 
+            // Lista os totais de Midea e Page
             const totalVideos = await Midea.count({ where: { account_id: accountId } });
             const totalPages = await Page.count({ where: { account_id: accountId } });
 
             res.status(200).json({ totalVideos, totalPages });
-            // res.status(200).json(accountId);
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
     },
-
 };
 
 module.exports = dashboardController;

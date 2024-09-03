@@ -4,7 +4,6 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class PasswordResetToken extends Model {
         static associate(models) {
-            // Associação com o modelo User
             PasswordResetToken.belongsTo(models.User, {
                 foreignKey: 'user_id',
                 as: 'user',

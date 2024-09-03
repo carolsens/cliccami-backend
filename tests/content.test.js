@@ -48,6 +48,7 @@ describe('Content Controller', () => {
         // Caminho para o arquivo de teste
         const filePath = path.join(__dirname, 'fixtures', 'cliccami.mp4');
 
+        // Cria um conteúdo de Midea, Page e Site, simulando a criação do usuário
         const response = await request(app)
             .post('/api/content/create')
             .set('Authorization', `Bearer ${token}`)
